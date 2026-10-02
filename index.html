@@ -1,357 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Kind Words, London</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap');
- 
-  :root {
-    --ink: #2A1A3E;
-    --ink-soft: #5A4A6E;
-    --paper: #FFF7F2;
-    --paper-edge: #F3E6DC;
-    --sun: #FFC24B;
-    --go: #2FB37A;
-    --go-deep: #1F8E60;
-    --coral: #FF5C8A;
-    --serif: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
-    --radius: 28px;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin:0; }
-  body {
-    min-height: 100vh;
-    min-height: 100dvh;
-    font-family: var(--serif); color: var(--ink);
-    display: flex; flex-direction: column;
-    padding: 24px 18px 20px;
-    background-color: #1a0f28;
-    background-image: linear-gradient(rgba(20,10,30,.55), rgba(30,15,45,.7)), var(--bg-image, none);
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    overflow-x: hidden;
-  }
-  .stage { width:100%; max-width:480px; margin:0 auto; flex:1; display:flex; flex-direction:column; justify-content:center; position:relative; z-index:2; }
-  .masthead { text-align:center; margin-bottom:22px; color:#fff; }
-  .visually-hidden { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-  .masthead .logo { display:block; width:clamp(240px,65vw,340px); height:auto; margin:0 auto; filter:drop-shadow(0 4px 20px rgba(0,0,0,.4)); }
-  .masthead p { margin:14px 0 0; font-size:15px; font-weight:400; opacity:.92; font-variation-settings:"opsz" 12; text-shadow:0 1px 12px rgba(0,0,0,.4); }
-  .card-wrap { perspective:1600px; }
-  .card { position:relative; transform-style:preserve-3d; transition:transform .7s cubic-bezier(.6,.05,.2,1); display:grid; }
-  .card.flipped { transform:rotateY(180deg); }
-  .face { grid-area:1/1; backface-visibility:hidden; -webkit-backface-visibility:hidden; background:var(--paper); border-radius:var(--radius); padding:30px 28px 30px; box-shadow:0 24px 60px -22px rgba(0,0,0,.55), 0 2px 0 var(--paper-edge); display:flex; flex-direction:column; min-height:280px; }
-  .face.back { transform:rotateY(180deg); }
-  .eyebrow { font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); font-weight:600; display:flex; align-items:center; gap:8px; margin-bottom:18px; }
-  .eyebrow::before { content:""; width:9px; height:9px; border-radius:50%; background:var(--sun); box-shadow:0 0 0 4px rgba(255,194,75,.25); animation:dot-pulse 2.8s ease-in-out infinite; transform-origin:center; }
-  @keyframes dot-pulse {
-    0%, 100% { box-shadow:0 0 0 4px rgba(255,194,75,.25); transform:scale(1); }
-    50%      { box-shadow:0 0 0 9px rgba(255,194,75,.05); transform:scale(1.08); }
-  }
-  .message { flex:1; display:flex; align-items:center; }
-  .message blockquote { margin:0; font-size:clamp(23px,6.4vw,30px); line-height:1.32; font-weight:500; font-variation-settings:"opsz" 60; color:var(--ink); }
-  .message.enter blockquote { animation:unfold .65s cubic-bezier(.2,.8,.2,1) both; }
-  @keyframes unfold { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
- 
-  /* controls that sit BELOW the card on the dark background */
-  .controls { margin-top:18px; transition:opacity .3s ease, visibility .3s; }
-  .controls.hidden { opacity:0; visibility:hidden; pointer-events:none; }
-  .meta { display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:22px; margin-bottom:14px; padding:0 4px; }
-  .provenance { font-size:13px; color:#fff; opacity:.78; font-style:italic; text-shadow:0 1px 8px rgba(0,0,0,.4); }
-  .report { font-family:var(--serif); font-style:normal; font-size:12px; color:#fff; background:none; border:none; padding:4px 2px; cursor:pointer; opacity:.7; text-decoration:underline; text-underline-offset:3px; flex:0 0 auto; text-shadow:0 1px 8px rgba(0,0,0,.4); }
-  .report:hover { opacity:1; color:var(--sun); }
-  .report[hidden] { display:none; }
-  .actions { display:flex; flex-direction:row; gap:8px; }
-  .actions button { flex:1 1 0; min-width:0; padding:14px 10px; font-size:15px; white-space:nowrap; }
-  @media (max-width: 380px) {
-    .actions button { font-size:13px; padding:14px 6px; }
-  }
- 
-  button { font-family:var(--serif); font-weight:600; border:none; border-radius:999px; cursor:pointer; transition:transform .12s ease, background .2s ease, color .2s ease, box-shadow .2s ease; -webkit-tap-highlight-color:transparent; }
-  button:active { transform:translateY(2px) scale(.99); }
-  button:focus-visible { outline:3px solid #fff; outline-offset:3px; }
-  /* Primary (middle): dark → inverts to white on hover */
-  .btn-primary { background:var(--ink); color:#fff; box-shadow:0 10px 24px -8px rgba(0,0,0,.7); }
-  .btn-primary:hover { background:#fff; color:var(--ink); }
-  /* White (outer): light → inverts to dark on hover */
-  .btn-white { background:#fff; color:var(--ink); box-shadow:0 10px 24px -8px rgba(0,0,0,.55); }
-  .btn-white:hover { background:var(--ink); color:#fff; }
-  /* Ghost (used inside the paper cards only, e.g. Back button) */
-  .btn-ghost { background:transparent; color:var(--ink); box-shadow:inset 0 0 0 2px rgba(42,26,62,.18); }
-  .btn-ghost:hover { background:rgba(42,26,62,.06); box-shadow:inset 0 0 0 2px rgba(42,26,62,.4); }
-  .btn-go { background:var(--go); color:#fff; box-shadow:0 10px 22px -8px rgba(47,179,122,.7); }
-  .btn-go:hover { background:var(--go-deep); }
-  .btn-go:disabled { opacity:.55; cursor:not-allowed; }
- 
-  /* Multi-face card: only the active back face is visible when flipped */
-  .face[data-face] { visibility:hidden; }
-  .card.mode-write .face[data-face="write"] { visibility:visible; }
-  .card.mode-about .face[data-face="about"] { visibility:visible; }
- 
-  /* About face content */
-  .face[data-face="about"] p { font-size:16px; line-height:1.55; color:var(--ink-soft); margin:0 0 12px; }
-  .face[data-face="about"] p:last-of-type { margin-bottom:0; }
-  .about-body { flex:1; margin:8px 0 16px; }
-  .about-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:auto; }
-  .about-link { font-size:14px; font-weight:600; color:var(--ink); text-decoration:none; border-bottom:2px solid var(--sun); padding-bottom:2px; transition:color .2s ease, border-color .2s ease; }
-  .about-link:hover { color:var(--coral); border-bottom-color:var(--coral); }
- 
-  .back h2 { font-size:22px; font-weight:600; margin:0 0 4px; }
-  .back .hint { font-size:14px; color:var(--ink-soft); margin:0 0 14px; }
-  textarea { font-family:var(--serif); font-size:19px; line-height:1.4; color:var(--ink); width:100%; flex:1; min-height:140px; border:2px solid var(--paper-edge); border-radius:18px; padding:16px; resize:none; background:#fffdfb; transition:border-color .2s ease; }
-  textarea:focus { outline:none; border-color:var(--sun); }
-  .meta-row { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
-  .counter { font-size:13px; color:var(--ink-soft); }
-  .status { font-size:14px; min-height:20px; margin-top:4px; }
-  .status.bad { color:#C0392B; }
-  .status.good { color:var(--go-deep); }
-  .status.busy { color:var(--ink-soft); }
-  /* status */
- 
-  .footnote { text-align:center; color:#fff; opacity:.85; font-size:13px; line-height:1.5; padding-top:24px; text-shadow:0 1px 10px rgba(0,0,0,.4); }
-  .footnote span { font-weight:600; }
- 
-  @media (prefers-reduced-motion: reduce) {
-    .card { transition:none; }
-    .message.enter blockquote { animation:none; }
-    .eyebrow::before { animation:none; }
-  }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Kind Words, London</title>
+  <meta name="description" content="Anonymous kindness, left by one Londoner for the next. Read a kind word, leave one for a stranger.">
+
+  <meta property="og:title" content="Kind Words, London">
+  <meta property="og:description" content="Anonymous kindness, left by one Londoner for the next.">
+  <meta property="og:type" content="website">
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap">
+
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <main class="stage">
     <div class="masthead">
       <h1 class="visually-hidden">Bank of Kindness</h1>
-      <svg class="logo" role="img" aria-label="Bank of Kindness" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 7034 1035">
-    <g transform="matrix(1,0,0,1,-66.206667,-93.500417)">
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1579.8636,22.4401)">
-                <path d="M0,248.367L-1439.791,248.367C-1508.375,248.367 -1563.974,192.768 -1563.974,124.183C-1563.974,55.598 -1508.375,0 -1439.791,0L0,0C68.585,0 124.184,55.598 124.184,124.183C124.184,192.768 68.585,248.367 0,248.367" style="fill:rgb(23,22,30);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,290.0519,142.1049)">
-                <path d="M0,-56.691L-24.048,-56.691L-24.048,10.556L-35.365,10.556L-35.365,-56.691L-60.175,-56.691L-60.175,-67.247L0,-67.247L0,-56.691Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,364.4034,74.8586)">
-                <path d="M0,77.802L-11.426,77.802L-11.426,40.915L-52.775,40.915L-52.775,77.802L-64.092,77.802L-64.092,0L-52.775,0L-52.775,30.359L-11.426,30.359L-11.426,0L0,0L0,77.802Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,430.5083,74.8586)">
-                <path d="M0,77.802L-51.035,77.802L-51.035,0L-1.851,0L-1.851,10.555L-39.717,10.555L-39.717,30.032L-12.187,30.032L-12.187,40.805L-39.717,40.805L-39.717,67.029L0,67.029L0,77.802Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,518.7559,98.797)">
-                <path d="M0,29.925C0,26.329 -1.283,23.253 -3.85,20.699C-6.419,18.145 -9.545,16.867 -13.232,16.867L-33.297,16.867L-33.297,43.091L-13.232,43.091C-9.545,43.091 -6.419,41.815 -3.85,39.261C-1.283,36.707 0,33.594 0,29.925M-10.12,-3.699C-10.12,-6.382 -11.141,-8.668 -13.182,-10.554C-15.221,-12.44 -17.664,-13.383 -20.506,-13.383L-33.297,-13.383L-33.297,6.094L-20.506,6.094C-17.737,6.094 -15.314,5.134 -13.236,3.211C-11.158,1.289 -10.12,-1.014 -10.12,-3.699M10.664,29.934C10.664,36.533 8.325,42.171 3.645,46.848C-1.033,51.526 -6.675,53.864 -13.275,53.864L-44.614,53.864L-44.614,-23.939L-20.456,-23.939C-14.871,-23.939 -9.975,-21.943 -5.767,-17.95C-1.561,-13.959 0.545,-9.168 0.545,-3.581C0.545,-1.33 0.017,0.904 -1.033,3.117C-2.086,5.331 -3.41,6.91 -5.005,7.851C-0.363,9.52 3.409,12.366 6.311,16.39C9.212,20.417 10.664,24.931 10.664,29.934" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,579.2134,104.2378)">
-                <path d="M0,19.043L-11.608,-12.766L-23.148,19.043L0,19.043ZM22.076,48.423L10.487,48.403L3.703,29.816L-27.096,29.816L-33.907,48.403L-45.385,48.423L-16.878,-29.38L-6.323,-29.38L22.076,48.423Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,677.8192,74.8826)">
-                <path d="M0,77.778L-11.674,77.802L-58.324,17.994L-58.324,77.778L-69.642,77.778L-69.642,-0.024L-57.889,-0.024L-11.208,59.82L-11.208,-0.024L0,-0.024L0,77.778Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,756.4701,74.8556)">
-                <path d="M0,77.805L-16.131,77.833L-51.795,42.166L-51.795,77.805L-63.113,77.805L-63.113,0.003L-51.795,0.003L-51.795,26.098L-20.591,-0.028L-2.829,0.003L-43.636,34.168L0,77.805Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,866.3696,113.9241)">
-                <path d="M0,0.107C0,-7.974 -2.846,-14.874 -8.541,-20.59C-14.237,-26.306 -21.146,-29.163 -29.27,-29.163C-37.322,-29.163 -44.196,-26.306 -49.89,-20.59C-55.586,-14.874 -58.432,-7.974 -58.432,0.107C-58.432,8.19 -55.603,15.073 -49.945,20.752C-44.286,26.43 -37.395,29.27 -29.27,29.27C-21.217,29.27 -14.327,26.43 -8.595,20.752C-2.866,15.073 0,8.19 0,0.107M10.665,0.107C10.665,11.135 6.764,20.548 -1.033,28.344C-8.831,36.144 -18.244,40.043 -29.27,40.043C-40.224,40.043 -49.601,36.144 -57.399,28.344C-65.197,20.548 -69.096,11.135 -69.096,0.107C-69.096,-10.919 -65.216,-20.349 -57.452,-28.184C-49.691,-36.02 -40.297,-39.936 -29.27,-39.936C-18.244,-39.936 -8.831,-36.037 -1.033,-28.239C6.764,-20.44 10.665,-10.992 10.665,0.107" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,937.5129,142.1049)">
-                <path d="M0,-56.691L-37.867,-56.691L-37.867,-37.214L-10.337,-37.214L-10.337,-26.441L-37.867,-26.441L-37.867,10.556L-49.183,10.556L-49.183,-67.247L0,-67.247L0,-56.691Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1043.9324,74.8556)">
-                <path d="M0,77.805L-16.13,77.833L-51.795,42.166L-51.795,77.805L-63.111,77.805L-63.111,0.003L-51.795,0.003L-51.795,26.098L-20.59,-0.028L-2.829,0.003L-43.635,34.168L0,77.805Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(-1,0,0,1,2117.05,-66.411)">
-                <rect x="1052.867" y="141.27" width="11.316" height="77.802" style="fill:rgb(242,242,242);"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1149.0459,74.8826)">
-                <path d="M0,77.778L-11.675,77.802L-58.325,17.994L-58.325,77.778L-69.642,77.778L-69.642,-0.024L-57.889,-0.024L-11.209,59.82L-11.209,-0.024L0,-0.024L0,77.778Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1220.1892,113.924)">
-                <path d="M0,-0.329C0,-8.09 -2.722,-14.762 -8.163,-20.349C-13.602,-25.934 -20.132,-28.729 -27.749,-28.729L-44.288,-28.729L-44.288,27.964L-27.749,27.964C-20.132,27.964 -13.602,25.208 -8.163,19.694C-2.722,14.181 0,7.507 0,-0.329M10.227,-0.329C10.227,10.409 6.509,19.603 -0.926,27.257C-8.363,34.911 -17.303,38.737 -27.749,38.737L-55.606,38.737L-55.606,-39.066L-27.749,-39.066C-17.303,-39.066 -8.363,-35.274 -0.926,-27.696C6.509,-20.113 10.227,-10.992 10.227,-0.329" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1312.3539,74.8826)">
-                <path d="M0,77.778L-11.673,77.802L-58.323,17.994L-58.323,77.778L-69.642,77.778L-69.642,-0.024L-57.889,-0.024L-11.207,59.82L-11.207,-0.024L0,-0.024L0,77.778Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1378.926,74.8586)">
-                <path d="M0,77.802L-51.035,77.802L-51.035,0L-1.85,0L-1.85,10.555L-39.716,10.555L-39.716,30.032L-12.186,30.032L-12.186,40.805L-39.716,40.805L-39.716,67.029L0,67.029L0,77.802Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1437.9905,97.598)">
-                <path d="M0,32.43C0,39.54 -2.522,45.433 -7.561,50.111C-12.605,54.79 -18.79,57.129 -26.115,57.129C-31.921,57.129 -37.124,55.46 -41.729,52.124C-46.337,48.788 -49.439,44.507 -51.035,39.285L-40.37,31.994C-40.37,35.766 -38.98,38.904 -36.198,41.407C-33.416,43.91 -30.074,45.16 -26.171,45.16C-22.123,45.16 -18.727,44 -15.98,41.678C-13.235,39.358 -11.86,36.275 -11.86,32.43C-11.86,29.599 -12.622,27.079 -14.145,24.867C-15.668,22.654 -17.7,21.004 -20.24,19.915C-22.706,19.045 -24.794,18.321 -26.497,17.739C-28.203,17.159 -30.179,16.397 -32.426,15.453C-36.707,13.787 -40.135,11.247 -42.709,7.836C-45.286,4.427 -46.573,0.475 -46.573,-4.023C-46.573,-10.045 -44.451,-14.996 -40.206,-18.878C-35.964,-22.757 -30.759,-24.699 -24.592,-24.699C-20.386,-24.699 -16.614,-23.737 -13.275,-21.816C-9.939,-19.892 -7.291,-17.191 -5.332,-13.709L-14.908,-7.179C-15.707,-8.992 -16.957,-10.408 -18.661,-11.424C-20.366,-12.438 -22.345,-12.947 -24.592,-12.947C-27.567,-12.947 -30.052,-12.167 -32.046,-10.607C-34.041,-9.046 -35.038,-6.852 -35.038,-4.023C-35.038,-1.918 -34.458,-0.125 -33.298,1.362C-32.138,2.851 -30.576,3.957 -28.617,4.681L-17.084,8.599C-12.006,10.339 -7.888,13.37 -4.732,17.685C-1.577,22.001 0,26.916 0,32.43" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1496.8057,97.598)">
-                <path d="M0,32.43C0,39.54 -2.522,45.433 -7.563,50.111C-12.607,54.79 -18.79,57.129 -26.117,57.129C-31.921,57.129 -37.126,55.46 -41.731,52.124C-46.339,48.788 -49.441,44.507 -51.035,39.285L-40.372,31.994C-40.372,35.766 -38.98,38.904 -36.198,41.407C-33.418,43.91 -30.073,45.16 -26.17,45.16C-22.123,45.16 -18.729,44 -15.982,41.678C-13.234,39.358 -11.862,36.275 -11.862,32.43C-11.862,29.599 -12.622,27.079 -14.147,24.867C-15.67,22.654 -17.703,21.004 -20.24,19.915C-22.708,19.045 -24.793,18.321 -26.497,17.739C-28.203,17.159 -30.181,16.397 -32.428,15.453C-36.709,13.787 -40.137,11.247 -42.711,7.836C-45.286,4.427 -46.573,0.475 -46.573,-4.023C-46.573,-10.045 -44.451,-14.996 -40.208,-18.878C-35.964,-22.757 -30.759,-24.699 -24.594,-24.699C-20.385,-24.699 -16.613,-23.737 -13.275,-21.816C-9.939,-19.892 -7.291,-17.191 -5.334,-13.709L-14.908,-7.179C-15.707,-8.992 -16.959,-10.408 -18.663,-11.424C-20.368,-12.438 -22.345,-12.947 -24.594,-12.947C-27.569,-12.947 -30.052,-12.167 -32.048,-10.607C-34.043,-9.046 -35.04,-6.852 -35.04,-4.023C-35.04,-1.918 -34.46,-0.125 -33.298,1.362C-32.138,2.851 -30.578,3.957 -28.619,4.681L-17.084,8.599C-12.008,10.339 -7.89,13.37 -4.734,17.685C-1.579,22.001 0,26.916 0,32.43" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,423.593,214.4029)">
-                <path d="M0,-28.17L-11.949,-28.17L-11.949,5.244L-17.573,5.244L-17.573,-28.17L-29.9,-28.17L-29.9,-33.414L0,-33.414L0,-28.17Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,460.5911,200.3998)">
-                <path d="M0,0.053C0,-3.962 -1.415,-7.391 -4.245,-10.23C-7.075,-13.071 -10.508,-14.492 -14.545,-14.492C-18.546,-14.492 -21.961,-13.071 -24.79,-10.23C-27.621,-7.391 -29.035,-3.962 -29.035,0.053C-29.035,4.069 -27.629,7.49 -24.817,10.31C-22.006,13.133 -18.582,14.544 -14.545,14.544C-10.543,14.544 -7.119,13.133 -4.272,10.31C-1.424,7.49 0,4.069 0,0.053M5.299,0.053C5.299,5.533 3.361,10.21 -0.513,14.084C-4.389,17.959 -9.066,19.896 -14.545,19.896C-19.987,19.896 -24.647,17.959 -28.522,14.084C-32.397,10.21 -34.334,5.533 -34.334,0.053C-34.334,-5.425 -32.406,-10.112 -28.548,-14.005C-24.692,-17.897 -20.024,-19.843 -14.545,-19.843C-9.066,-19.843 -4.389,-17.907 -0.513,-14.031C3.361,-10.156 5.299,-5.462 5.299,0.053" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,510.28,180.9892)">
-                <path d="M0,38.658L-24.06,38.658L-24.06,0L-18.492,0L-18.492,33.035L0,33.035L0,38.658Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,547.0563,200.3998)">
-                <path d="M0,0.053C0,-3.962 -1.415,-7.391 -4.245,-10.23C-7.075,-13.071 -10.508,-14.492 -14.545,-14.492C-18.545,-14.492 -21.961,-13.071 -24.79,-10.23C-27.621,-7.391 -29.035,-3.962 -29.035,0.053C-29.035,4.069 -27.629,7.49 -24.817,10.31C-22.006,13.133 -18.582,14.544 -14.545,14.544C-10.543,14.544 -7.119,13.133 -4.272,10.31C-1.424,7.49 0,4.069 0,0.053M5.299,0.053C5.299,5.533 3.361,10.21 -0.513,14.084C-4.389,17.959 -9.066,19.896 -14.545,19.896C-19.987,19.896 -24.647,17.959 -28.522,14.084C-32.397,10.21 -34.333,5.533 -34.333,0.053C-34.333,-5.425 -32.406,-10.112 -28.548,-14.005C-24.692,-17.897 -20.024,-19.843 -14.545,-19.843C-9.066,-19.843 -4.389,-17.907 -0.513,-14.031C3.361,-10.156 5.299,-5.462 5.299,0.053" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,592.895,181.0002)">
-                <path d="M0,38.647L-5.8,38.658L-28.98,8.941L-28.98,38.647L-34.604,38.647L-34.604,-0.011L-28.764,-0.011L-5.569,29.725L-5.569,-0.011L0,-0.011L0,38.647Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,628.559,200.3994)">
-                <path d="M0,-0.162C0,-4.019 -1.352,-7.335 -4.055,-10.111C-6.759,-12.887 -10.003,-14.274 -13.787,-14.274L-22.006,-14.274L-22.006,13.895L-13.787,13.895C-10.003,13.895 -6.759,12.526 -4.055,9.785C-1.352,7.046 0,3.73 0,-0.162M5.082,-0.162C5.082,5.173 3.235,9.741 -0.46,13.544C-4.155,17.346 -8.597,19.248 -13.787,19.248L-27.629,19.248L-27.629,-19.41L-13.787,-19.41C-8.597,-19.41 -4.155,-17.527 -0.46,-13.762C3.235,-9.994 5.082,-5.462 5.082,-0.162" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,672.9326,200.3998)">
-                <path d="M0,0.053C0,-3.962 -1.415,-7.391 -4.245,-10.23C-7.075,-13.071 -10.508,-14.492 -14.545,-14.492C-18.545,-14.492 -21.961,-13.071 -24.79,-10.23C-27.621,-7.391 -29.035,-3.962 -29.035,0.053C-29.035,4.069 -27.629,7.49 -24.817,10.31C-22.006,13.133 -18.582,14.544 -14.545,14.544C-10.543,14.544 -7.119,13.133 -4.272,10.31C-1.424,7.49 0,4.069 0,0.053M5.299,0.053C5.299,5.533 3.361,10.21 -0.513,14.084C-4.389,17.959 -9.066,19.896 -14.545,19.896C-19.987,19.896 -24.647,17.959 -28.521,14.084C-32.397,10.21 -34.333,5.533 -34.333,0.053C-34.333,-5.425 -32.406,-10.112 -28.548,-14.005C-24.692,-17.897 -20.024,-19.843 -14.545,-19.843C-9.066,-19.843 -4.389,-17.907 -0.513,-14.031C3.361,-10.156 5.299,-5.462 5.299,0.053" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,718.7714,181.0002)">
-                <path d="M0,38.647L-5.8,38.658L-28.98,8.941L-28.98,38.647L-34.604,38.647L-34.604,-0.011L-28.764,-0.011L-5.569,29.725L-5.569,-0.011L0,-0.011L0,38.647Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,752.1644,180.9892)">
-                <path d="M0,38.658L-25.358,38.658L-25.358,0L-0.919,0L-0.919,5.244L-19.735,5.244L-19.735,14.922L-6.055,14.922L-6.055,20.275L-19.735,20.275L-19.735,33.305L0,33.305L0,38.658Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,775.1218,208.5096)">
-                <path d="M0,-16.383C0,-17.933 -0.541,-19.248 -1.622,-20.331C-2.704,-21.411 -4.002,-21.952 -5.515,-21.952L-12.111,-21.952L-12.111,-10.868L-5.515,-10.868C-4.002,-10.868 -2.704,-11.408 -1.622,-12.491C-0.541,-13.572 0,-14.87 0,-16.383M10.975,11.138L4.04,11.112L-7.15,-5.543L-12.111,-5.515L-12.111,11.138L-17.735,11.138L-17.735,-27.521L-5.515,-27.521C-2.487,-27.521 0.108,-26.458 2.271,-24.33C4.433,-22.204 5.515,-19.608 5.515,-16.545C5.515,-14.346 4.928,-12.355 3.757,-10.571C2.586,-8.787 1.008,-7.444 -0.973,-6.543L10.975,11.138Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,814.4949,192.2882)">
-                <path d="M0,16.112C0,19.646 -1.253,22.574 -3.758,24.899C-6.264,27.224 -9.336,28.386 -12.977,28.386C-15.861,28.386 -18.447,27.556 -20.736,25.9C-23.025,24.241 -24.566,22.115 -25.358,19.519L-20.06,15.897C-20.06,17.772 -19.369,19.33 -17.987,20.574C-16.604,21.816 -14.943,22.438 -13.004,22.438C-10.994,22.438 -9.306,21.863 -7.941,20.708C-6.576,19.555 -5.894,18.025 -5.894,16.112C-5.894,14.706 -6.273,13.455 -7.029,12.356C-7.786,11.256 -8.796,10.436 -10.057,9.895C-11.283,9.463 -12.319,9.102 -13.166,8.814C-14.014,8.525 -14.996,8.148 -16.113,7.678C-18.24,6.85 -19.943,5.587 -21.222,3.894C-22.503,2.2 -23.141,0.236 -23.141,-2C-23.141,-4.991 -22.088,-7.452 -19.979,-9.381C-17.87,-11.308 -15.284,-12.274 -12.22,-12.274C-10.13,-12.274 -8.255,-11.795 -6.597,-10.84C-4.939,-9.884 -3.623,-8.542 -2.65,-6.813L-7.408,-3.569C-7.804,-4.47 -8.427,-5.171 -9.273,-5.677C-10.121,-6.182 -11.103,-6.434 -12.22,-6.434C-13.698,-6.434 -14.933,-6.046 -15.924,-5.272C-16.915,-4.496 -17.41,-3.406 -17.41,-2C-17.41,-0.954 -17.122,-0.061 -16.546,0.676C-15.969,1.415 -15.194,1.966 -14.22,2.325L-8.489,4.273C-5.966,5.136 -3.921,6.642 -2.353,8.787C-0.785,10.931 0,13.373 0,16.112" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,859.8574,214.4029)">
-                <path d="M0,-28.17L-18.816,-28.17L-18.816,-18.492L-5.136,-18.492L-5.136,-13.139L-18.816,-13.139L-18.816,5.244L-24.439,5.244L-24.439,-33.414L0,-33.414L0,-28.17Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,882.7061,208.5096)">
-                <path d="M0,-16.383C0,-17.933 -0.542,-19.248 -1.623,-20.331C-2.704,-21.411 -4.002,-21.952 -5.515,-21.952L-12.112,-21.952L-12.112,-10.868L-5.515,-10.868C-4.002,-10.868 -2.704,-11.408 -1.623,-12.491C-0.542,-13.572 0,-14.87 0,-16.383M10.974,11.138L4.039,11.112L-7.151,-5.543L-12.112,-5.515L-12.112,11.138L-17.735,11.138L-17.735,-27.521L-5.515,-27.521C-2.488,-27.521 0.108,-26.458 2.271,-24.33C4.432,-22.204 5.515,-19.608 5.515,-16.545C5.515,-14.346 4.928,-12.355 3.756,-10.571C2.585,-8.787 1.008,-7.444 -0.973,-6.543L10.974,11.138Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,930.9514,200.3998)">
-                <path d="M0,0.053C0,-3.962 -1.415,-7.391 -4.245,-10.23C-7.075,-13.071 -10.508,-14.492 -14.545,-14.492C-18.546,-14.492 -21.961,-13.071 -24.791,-10.23C-27.621,-7.391 -29.036,-3.962 -29.036,0.053C-29.036,4.069 -27.63,7.49 -24.817,10.31C-22.006,13.133 -18.582,14.544 -14.545,14.544C-10.543,14.544 -7.119,13.133 -4.273,10.31C-1.424,7.49 0,4.069 0,0.053M5.298,0.053C5.298,5.533 3.361,10.21 -0.514,14.084C-4.39,17.959 -9.067,19.896 -14.545,19.896C-19.987,19.896 -24.648,17.959 -28.522,14.084C-32.397,10.21 -34.334,5.533 -34.334,0.053C-34.334,-5.425 -32.406,-10.112 -28.549,-14.005C-24.693,-17.897 -20.024,-19.843 -14.545,-19.843C-9.067,-19.843 -4.39,-17.907 -0.514,-14.031C3.361,-10.156 5.298,-5.462 5.298,0.053" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,981.9261,180.9892)">
-                <path d="M0,38.658L-5.623,38.658L-5.623,8.358L-19.859,26.217L-34.116,8.842L-34.116,38.658L-39.741,38.658L-39.741,0L-34.116,0L-19.896,18.112L-5.461,0L0,0L0,38.658Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1027.6145,180.9892)">
-                <path d="M0,38.658L-24.061,38.658L-24.061,0L-18.493,0L-18.493,33.035L0,33.035L0,38.658Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1064.3898,200.3998)">
-                <path d="M0,0.053C0,-3.962 -1.415,-7.391 -4.245,-10.23C-7.075,-13.071 -10.508,-14.492 -14.545,-14.492C-18.545,-14.492 -21.961,-13.071 -24.789,-10.23C-27.621,-7.391 -29.034,-3.962 -29.034,0.053C-29.034,4.069 -27.628,7.49 -24.817,10.31C-22.006,13.133 -18.582,14.544 -14.545,14.544C-10.543,14.544 -7.119,13.133 -4.271,10.31C-1.424,7.49 0,4.069 0,0.053M5.3,0.053C5.3,5.533 3.361,10.21 -0.512,14.084C-4.388,17.959 -9.065,19.896 -14.545,19.896C-19.987,19.896 -24.646,17.959 -28.521,14.084C-32.397,10.21 -34.333,5.533 -34.333,0.053C-34.333,-5.425 -32.406,-10.112 -28.547,-14.005C-24.691,-17.897 -20.023,-19.843 -14.545,-19.843C-9.065,-19.843 -4.388,-17.907 -0.512,-14.031C3.361,-10.156 5.3,-5.462 5.3,0.053" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1110.2285,181.0002)">
-                <path d="M0,38.647L-5.799,38.658L-28.98,8.941L-28.98,38.647L-34.603,38.647L-34.603,-0.011L-28.763,-0.011L-5.569,29.725L-5.569,-0.011L0,-0.011L0,38.647Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1145.8934,200.3994)">
-                <path d="M0,-0.162C0,-4.019 -1.352,-7.335 -4.055,-10.111C-6.759,-12.887 -10.003,-14.274 -13.787,-14.274L-22.006,-14.274L-22.006,13.895L-13.787,13.895C-10.003,13.895 -6.759,12.526 -4.055,9.785C-1.352,7.046 0,3.73 0,-0.162M5.082,-0.162C5.082,5.173 3.235,9.741 -0.46,13.544C-4.156,17.346 -8.597,19.248 -13.787,19.248L-27.63,19.248L-27.63,-19.41L-13.787,-19.41C-8.597,-19.41 -4.156,-17.527 -0.46,-13.762C3.235,-9.994 5.082,-5.462 5.082,-0.162" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1190.2671,200.3998)">
-                <path d="M0,0.053C0,-3.962 -1.415,-7.391 -4.245,-10.23C-7.075,-13.071 -10.508,-14.492 -14.545,-14.492C-18.546,-14.492 -21.961,-13.071 -24.791,-10.23C-27.621,-7.391 -29.036,-3.962 -29.036,0.053C-29.036,4.069 -27.63,7.49 -24.817,10.31C-22.006,13.133 -18.582,14.544 -14.545,14.544C-10.543,14.544 -7.119,13.133 -4.273,10.31C-1.424,7.49 0,4.069 0,0.053M5.298,0.053C5.298,5.533 3.361,10.21 -0.514,14.084C-4.39,17.959 -9.067,19.896 -14.545,19.896C-19.987,19.896 -24.648,17.959 -28.521,14.084C-32.397,10.21 -34.333,5.533 -34.333,0.053C-34.333,-5.425 -32.406,-10.112 -28.549,-14.005C-24.693,-17.897 -20.025,-19.843 -14.545,-19.843C-9.067,-19.843 -4.39,-17.907 -0.514,-14.031C3.361,-10.156 5.298,-5.462 5.298,0.053" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1236.1058,181.0002)">
-                <path d="M0,38.647L-5.801,38.658L-28.98,8.941L-28.98,38.647L-34.605,38.647L-34.605,-0.011L-28.765,-0.011L-5.569,29.725L-5.569,-0.011L0,-0.011L0,38.647Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1269.4979,180.9892)">
-                <path d="M0,38.658L-25.357,38.658L-25.357,0L-0.919,0L-0.919,5.244L-19.735,5.244L-19.735,14.922L-6.055,14.922L-6.055,20.275L-19.735,20.275L-19.735,33.305L0,33.305L0,38.658Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1292.4563,208.5096)">
-                <path d="M0,-16.383C0,-17.933 -0.542,-19.248 -1.623,-20.331C-2.704,-21.411 -4.002,-21.952 -5.515,-21.952L-12.112,-21.952L-12.112,-10.868L-5.515,-10.868C-4.002,-10.868 -2.704,-11.408 -1.623,-12.491C-0.542,-13.572 0,-14.87 0,-16.383M10.974,11.138L4.039,11.112L-7.151,-5.543L-12.112,-5.515L-12.112,11.138L-17.735,11.138L-17.735,-27.521L-5.515,-27.521C-2.488,-27.521 0.108,-26.458 2.271,-24.33C4.432,-22.204 5.515,-19.608 5.515,-16.545C5.515,-14.346 4.928,-12.355 3.756,-10.571C2.585,-8.787 1.008,-7.444 -0.973,-6.543L10.974,11.138Z" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(1,0,0,1,1331.8293,192.2882)">
-                <path d="M0,16.112C0,19.646 -1.253,22.574 -3.758,24.899C-6.265,27.224 -9.336,28.386 -12.978,28.386C-15.861,28.386 -18.448,27.556 -20.736,25.9C-23.025,24.241 -24.566,22.115 -25.359,19.519L-20.06,15.897C-20.06,17.772 -19.369,19.33 -17.988,20.574C-16.604,21.816 -14.944,22.438 -13.004,22.438C-10.995,22.438 -9.307,21.863 -7.942,20.708C-6.577,19.555 -5.894,18.025 -5.894,16.112C-5.894,14.706 -6.272,13.455 -7.03,12.356C-7.786,11.256 -8.796,10.436 -10.057,9.895C-11.284,9.463 -12.32,9.102 -13.167,8.814C-14.014,8.525 -14.996,8.148 -16.114,7.678C-18.24,6.85 -19.943,5.587 -21.222,3.894C-22.503,2.2 -23.142,0.236 -23.142,-2C-23.142,-4.991 -22.088,-7.452 -19.98,-9.381C-17.87,-11.308 -15.284,-12.274 -12.22,-12.274C-10.131,-12.274 -8.256,-11.795 -6.597,-10.84C-4.939,-9.884 -3.623,-8.542 -2.65,-6.813L-7.409,-3.569C-7.804,-4.47 -8.427,-5.171 -9.273,-5.677C-10.122,-6.182 -11.104,-6.434 -12.22,-6.434C-13.698,-6.434 -14.933,-6.046 -15.925,-5.272C-16.916,-4.496 -17.41,-3.406 -17.41,-2C-17.41,-0.954 -17.122,-0.061 -16.547,0.676C-15.969,1.415 -15.195,1.966 -14.22,2.325L-8.49,4.273C-5.966,5.136 -3.922,6.642 -2.353,8.787C-0.785,10.931 0,13.373 0,16.112" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(0,-1,-1,0,135.1461,129.4477)">
-                <path d="M-15.8,-15.8C-24.526,-15.8 -31.6,-8.726 -31.6,0C-31.6,8.726 -24.526,15.8 -15.8,15.8C-7.074,15.8 0,8.726 0,0C0,-8.726 -7.074,-15.8 -15.8,-15.8" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-        <g transform="matrix(4.166667,0,0,4.166667,0,0)">
-            <g transform="matrix(0,-1,-1,0,1582.5145,129.4477)">
-                <path d="M-15.8,-15.8C-24.526,-15.8 -31.6,-8.726 -31.6,0C-31.6,8.726 -24.526,15.8 -15.8,15.8C-7.074,15.8 0,8.726 0,0C0,-8.726 -7.074,-15.8 -15.8,-15.8" style="fill:rgb(242,242,242);fill-rule:nonzero;"/>
-            </g>
-        </g>
-    </g>
-</svg>
+      <img class="logo" src="assets/logo.svg" alt="Bank of Kindness" width="7034" height="1035">
       <p>Anonymous kindness, left by one Londoner for the next.</p>
     </div>
- 
+
     <div class="card-wrap">
       <div class="card" id="card">
         <section class="face front" aria-label="A kind word from a stranger">
@@ -360,8 +34,8 @@
             <blockquote id="msgText">Unfolding a kind word…</blockquote>
           </div>
         </section>
- 
-        <section class="face back" data-face="write" aria-label="Write a kind word">
+
+        <section class="face back" data-face="write" inert aria-label="Write a kind word">
           <div class="eyebrow">For the next person</div>
           <h2>Leave something kind</h2>
           <p class="hint">Write to a stranger you'll never meet. Keep it warm — it's checked before it's passed on.</p>
@@ -375,8 +49,8 @@
             <button class="btn-go" id="sendBtn" type="button" style="flex:1 1 auto;">Send it on</button>
           </div>
         </section>
- 
-        <section class="face back" data-face="about" aria-label="About this project">
+
+        <section class="face back" data-face="about" inert aria-label="About this project">
           <div class="eyebrow">About the project</div>
           <h2>Random Words of Kindness</h2>
           <div class="about-body">
@@ -390,7 +64,7 @@
         </section>
       </div>
     </div>
- 
+
     <div class="controls" id="controls">
       <div class="meta">
         <span class="provenance" id="prov"></span>
@@ -403,155 +77,192 @@
       </div>
     </div>
   </main>
- 
+
   <footer class="footnote">No names, no logins, nothing tracked. <span>Every message is checked for kindness before anyone sees it.</span></footer>
- 
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
- 
-  // ===========================================================================
-  //  FILL THESE IN  (Settings → API in your Supabase dashboard)
-  // ===========================================================================
-  const CONFIG = {
-    SUPABASE_URL:  'https://YOUR-PROJECT-REF.supabase.co',
-    SUPABASE_KEY:  'YOUR-PUBLISHABLE-OR-ANON-KEY',   // public + RLS-protected; safe to commit
-    SUBMIT_URL:    'https://YOUR-PROJECT-REF.supabase.co/functions/v1/submit',
-  };
-  // ===========================================================================
- 
-  // ===========================================================================
-  //  BACKGROUND IMAGES  — add your own to /images/backgrounds/ and list them here
-  //  A random one is chosen each time the page loads. Contributors who fork this
-  //  can drop in photos of their own city and update the filenames below.
-  // ===========================================================================
-  const BACKGROUNDS = [
-    'images/backgrounds/brick_wall.jpg',
-    'images/backgrounds/tiles_temp.jpg',
-    // add more here — any file in /images/backgrounds/ that you list here
-  ];
- 
-  if (BACKGROUNDS.length) {
-    const pick = BACKGROUNDS[Math.floor(Math.random() * BACKGROUNDS.length)];
-    // preload so the overlay doesn't flash a bare colour, then apply
-    const img = new Image();
-    img.onload = () => document.body.style.setProperty('--bg-image', `url('${pick}')`);
-    img.src = pick;
-  }
- 
-  const sb = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
- 
-  const el = id => document.getElementById(id);
-  const card = el('card'), msgText = el('msgText'), msgBox = el('msgBox'), prov = el('prov');
-  const input = el('input'), counter = el('counter'), status = el('status'), sendBtn = el('sendBtn');
-  const reportBtn = el('reportBtn'), controls = el('controls');
-  let lastId = null;
- 
-  function setMessage(text, line, reportable) {
-    msgText.textContent = text;
-    prov.textContent = line || '';
-    reportBtn.hidden = !reportable;
-    msgBox.classList.remove('enter');
-    void msgBox.offsetWidth;
-    msgBox.classList.add('enter');
-  }
- 
-  async function showRandom() {
-    try {
-      const { data, error } = await sb.rpc('get_random_message', { exclude_id: lastId });
-      if (error) throw error;
-      if (!data || !data.length) {
-        setMessage('Be the very first. Pass on a kind word and the next person will find it here.', '', false);
-        return;
-      }
-      const m = data[0];
-      lastId = m.id;
-      setMessage(m.text, 'Left for whoever came next.', true);
-    } catch (e) {
-      setMessage("Couldn't reach the wall just now. Tap to try again.", '', false);
+
+  <script>
+    // =========================================================================
+    //  BACKGROUND IMAGES — set directly on body.style so the URL resolves
+    //  relative to the HTML file, not the CSS file. Runs immediately.
+    // =========================================================================
+    var BACKGROUNDS = [
+      'images/backgrounds/IMG_4698.webp',
+      'images/backgrounds/IMG_4699.webp',
+      'images/backgrounds/IMG_5391.webp',
+      'images/backgrounds/IMG_5392.webp',
+      'images/backgrounds/IMG_5405.webp',
+      'images/backgrounds/IMG_5406.webp',
+      'images/backgrounds/IMG_5685.webp',
+      'images/backgrounds/IMG_5687.webp',
+      'images/backgrounds/IMG_5689.webp',
+      'images/backgrounds/IMG_5690.webp',
+      'images/backgrounds/IMG_5691.webp',
+      'images/backgrounds/IMG_5692.webp',
+      'images/backgrounds/IMG_5693.webp',
+      'images/backgrounds/IMG_5694.webp',
+      'images/backgrounds/IMG_5698.webp',
+      'images/backgrounds/IMG_5699.webp',
+      'images/backgrounds/IMG_5708.webp',
+      'images/backgrounds/IMG_5710.webp',
+      'images/backgrounds/IMG_5711.webp',
+      'images/backgrounds/IMG_5712.webp',
+      'images/backgrounds/IMG_5713.webp',
+      'images/backgrounds/IMG_5714.webp',
+      'images/backgrounds/IMG_5716.webp',
+      'images/backgrounds/IMG_5717.webp',
+      'images/backgrounds/IMG_5718.webp',
+      'images/backgrounds/IMG_5719.webp',
+      'images/backgrounds/IMG_5720.webp',
+      'images/backgrounds/IMG_5722.webp',
+      'images/backgrounds/IMG_5724.webp',
+      'images/backgrounds/IMG_5725.webp',
+      'images/backgrounds/IMG_5726.webp',
+      'images/backgrounds/IMG_5727.webp',
+      'images/backgrounds/IMG_5728.webp',
+      'images/backgrounds/IMG_5729.webp',
+    ];
+    var pick = BACKGROUNDS[Math.floor(Math.random() * BACKGROUNDS.length)];
+    document.body.style.backgroundImage = "url('" + pick + "')";
+
+    // =========================================================================
+    //  FILL THESE IN  (Settings → API in your Supabase dashboard)
+    // =========================================================================
+    var CONFIG = {
+      SUPABASE_URL:  'https://YOUR-PROJECT-REF.supabase.co',
+      SUPABASE_KEY:  'YOUR-PUBLISHABLE-OR-ANON-KEY',
+      SUBMIT_URL:    'https://YOUR-PROJECT-REF.supabase.co/functions/v1/submit',
+    };
+    // =========================================================================
+
+    // --- DOM refs ---
+    var el = id => document.getElementById(id);
+    var card = el('card'), msgText = el('msgText'), msgBox = el('msgBox'), prov = el('prov');
+    var input = el('input'), counter = el('counter'), status = el('status'), sendBtn = el('sendBtn');
+    var reportBtn = el('reportBtn'), controls = el('controls');
+    var lastId = null;
+
+    // --- UI functions (work immediately, no external deps) ---
+    function setMessage(text, line, reportable) {
+      msgText.textContent = text;
+      prov.textContent = line || '';
+      reportBtn.hidden = !reportable;
+      msgBox.classList.remove('enter');
+      void msgBox.offsetWidth;
+      msgBox.classList.add('enter');
     }
-  }
- 
-  async function report() {
-    if (!lastId) return;
-    if (!confirm('Report this message as unkind or inappropriate? It will be hidden while someone checks it.')) return;
-    const id = lastId;
-    reportBtn.hidden = true;
-    try {
-      await sb.rpc('report_message', { msg_id: id });
-    } catch (e) { /* fail quietly — still move them on */ }
-    setMessage('Thanks for flagging that. Here\u2019s another.', '', false);
-    lastId = id;            // exclude the reported one from the next pull
-    setTimeout(showRandom, 1100);
-  }
- 
-  async function send() {
-    const text = input.value.trim();
-    if (text.length < 3) { status.className = 'status bad'; status.textContent = 'A little too short — add a few more words.'; return; }
- 
-    sendBtn.disabled = true;
-    status.className = 'status busy';
-    status.textContent = "Checking it's kind…";
- 
-    try {
-      const res = await fetch(CONFIG.SUBMIT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': CONFIG.SUPABASE_KEY,
-        },
-        body: JSON.stringify({ text }),
+
+    function flip(mode) {
+      card.classList.toggle('flipped', mode !== 'front');
+      card.classList.toggle('mode-write', mode === 'write');
+      card.classList.toggle('mode-about', mode === 'about');
+      controls.classList.toggle('hidden', mode !== 'front');
+      card.querySelectorAll('.face').forEach(function(f) {
+        var faceMode = f.dataset.face || 'front';
+        f.inert = faceMode !== mode;
       });
-      const v = await res.json();
- 
-      if (v.approved) {
-        finishOk('Folded up and passed on. Thank you.', true);
-      } else if (v.pending) {
-        finishOk("Received — a person will check it before it's passed on.", false);
-      } else {
-        status.className = 'status bad';
-        status.textContent = v.reason || "Let's keep it kind — try rephrasing.";
-        sendBtn.disabled = false;
-      }
-    } catch (e) {
-      status.className = 'status bad';
-      status.textContent = "Couldn't send just now — try once more.";
-      sendBtn.disabled = false;
+      if (mode === 'write') setTimeout(function() { input.focus(); }, 400);
     }
-  }
- 
-  function finishOk(msg, refresh) {
-    status.className = 'status good';
-    status.textContent = msg;
-    input.value = '';
-    counter.textContent = '0 / 280';
-    sendBtn.disabled = false;
-    setTimeout(() => {
-      flip('front');
-      status.textContent = ''; status.className = 'status';
-      if (refresh) showRandom();
-    }, 1400);
-  }
- 
-  function flip(mode) {
-    // mode: 'front' | 'write' | 'about'
-    card.classList.toggle('flipped', mode !== 'front');
-    card.classList.toggle('mode-write', mode === 'write');
-    card.classList.toggle('mode-about', mode === 'about');
-    controls.classList.toggle('hidden', mode !== 'front');
-    if (mode === 'write') setTimeout(() => input.focus(), 400);
-  }
- 
-  el('anotherBtn').addEventListener('click', showRandom);
-  reportBtn.addEventListener('click', report);
-  el('passBtn').addEventListener('click', () => flip('write'));
-  el('aboutBtn').addEventListener('click', () => flip('about'));
-  el('backBtn').addEventListener('click', () => { flip('front'); status.textContent = ''; status.className = 'status'; });
-  el('aboutBackBtn').addEventListener('click', () => flip('front'));
-  sendBtn.addEventListener('click', send);
-  input.addEventListener('input', () => { counter.textContent = input.value.length + ' / 280'; });
- 
-  showRandom();
-</script>
+
+    // --- Event wiring (UI buttons work immediately) ---
+    el('passBtn').addEventListener('click', function() { flip('write'); });
+    el('aboutBtn').addEventListener('click', function() { flip('about'); });
+    el('backBtn').addEventListener('click', function() { flip('front'); status.textContent = ''; status.className = 'status'; });
+    el('aboutBackBtn').addEventListener('click', function() { flip('front'); });
+    input.addEventListener('input', function() { counter.textContent = input.value.length + ' / 280'; });
+
+    // --- API-dependent features (Supabase) ---
+    // Dynamic import so UI works even if esm.sh is unreachable.
+    import('https://esm.sh/@supabase/supabase-js@2').then(function(module) {
+      var createClient = module.createClient;
+      var sb = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+
+      async function showRandom() {
+        try {
+          var res = await sb.rpc('get_random_message', { exclude_id: lastId });
+          if (res.error) throw res.error;
+          if (!res.data || !res.data.length) {
+            setMessage('Be the very first. Pass on a kind word and the next person will find it here.', '', false);
+            return;
+          }
+          var m = res.data[0];
+          lastId = m.id;
+          setMessage(m.text, 'Left for whoever came next.', true);
+        } catch (e) {
+          setMessage("Couldn't reach the wall just now. Tap to try again.", '', false);
+        }
+      }
+
+      async function report() {
+        if (!lastId) return;
+        if (!confirm('Report this message as unkind or inappropriate? It will be hidden while someone checks it.')) return;
+        var id = lastId;
+        reportBtn.hidden = true;
+        try {
+          await sb.rpc('report_message', { msg_id: id });
+        } catch (e) { /* fail quietly — still move them on */ }
+        setMessage('Thanks for flagging that. Here\u2019s another.', '', false);
+        lastId = id;
+        setTimeout(showRandom, 1100);
+      }
+
+      async function send() {
+        var text = input.value.trim();
+        if (text.length < 3) { status.className = 'status bad'; status.textContent = 'A little too short — add a few more words.'; return; }
+
+        sendBtn.disabled = true;
+        status.className = 'status busy';
+        status.textContent = "Checking it's kind…";
+
+        try {
+          var res = await fetch(CONFIG.SUBMIT_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': CONFIG.SUPABASE_KEY,
+            },
+            body: JSON.stringify({ text: text }),
+          });
+          var v = await res.json();
+
+          if (v.approved) {
+            finishOk('Folded up and passed on. Thank you.', true);
+          } else if (v.pending) {
+            finishOk("Received — a person will check it before it's passed on.", false);
+          } else {
+            status.className = 'status bad';
+            status.textContent = v.reason || "Let's keep it kind — try rephrasing.";
+            sendBtn.disabled = false;
+          }
+        } catch (e) {
+          status.className = 'status bad';
+          status.textContent = "Couldn't send just now — try once more.";
+          sendBtn.disabled = false;
+        }
+      }
+
+      function finishOk(msg, refresh) {
+        status.className = 'status good';
+        status.textContent = msg;
+        input.value = '';
+        counter.textContent = '0 / 280';
+        sendBtn.disabled = false;
+        setTimeout(function() {
+          flip('front');
+          status.textContent = ''; status.className = 'status';
+          if (refresh) showRandom();
+        }, 1400);
+      }
+
+      // Wire API-dependent buttons
+      el('anotherBtn').addEventListener('click', showRandom);
+      reportBtn.addEventListener('click', report);
+      sendBtn.addEventListener('click', send);
+
+      // Initial load
+      showRandom();
+    }).catch(function() {
+      setMessage("Couldn't reach the wall just now.", '', false);
+    });
+  </script>
 </body>
 </html>
- 
