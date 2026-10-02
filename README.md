@@ -1,3 +1,7 @@
+
+Site is live and can be accessed here: https://oliveoil-design.github.io/Random-Words-of-Kindness-London/
+
+
 # Kind Words, London
 
 A QR-sticker kindness wall. Scan → read a random kind message left by a stranger → leave one for the next person. Every submission is checked by an LLM (any OpenAI-compatible endpoint) before it's published; anything the checker can't clear is held for a human, never auto-published.
