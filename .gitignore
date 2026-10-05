@@ -8,3 +8,6 @@ supabase/.temp
 .vscode/
 .idea/
 node_modules/
+
+# Design feedback — not for commit
+Feedback_Exclude from Commit/
