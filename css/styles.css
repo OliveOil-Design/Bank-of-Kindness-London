@@ -100,6 +100,8 @@ button:focus-visible { outline:3px solid var(--paper); outline-offset:3px; }
 .face[data-face="about"] p { font-family:var(--font-ui); font-size:14px; line-height:1.6; letter-spacing:.02em; color:var(--line); margin:0 0 12px; text-transform:none; }
 .face[data-face="about"] p:last-of-type { margin-bottom:0; }
 .about-body { flex:1; margin:18px 0; }
+.about-body a { color:var(--dark); text-decoration:none; border-bottom:1px solid var(--line); padding-bottom:1px; transition:color .2s ease, border-color .2s ease; }
+.about-body a:hover { color:var(--line); border-bottom-color:var(--dark); }
 .about-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:auto; }
 .about-link { font-family:var(--font-ui); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--dark); text-decoration:none; border-bottom:2px solid var(--line); padding-bottom:2px; transition:color .2s ease, border-color .2s ease; }
 .about-link:hover { color:var(--line); border-bottom-color:var(--dark); }
