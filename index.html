@@ -144,7 +144,7 @@
     // --- DOM refs ---
     var el = id => document.getElementById(id);
     var card = el('card'), msgText = el('msgText'), msgBox = el('msgBox');
-    var input = el('input'), counter = el('counter'), status = el('status'), sendBtn = el('sendBtn');
+    var input = el('input'), counter = el('counter'), statusEl = el('status'), sendBtn = el('sendBtn');
     var reportBtn = el('reportBtn'), controls = el('controls');
     var lastId = null;
 
@@ -172,7 +172,7 @@
     // --- Event wiring (UI buttons work immediately) ---
     el('passBtn').addEventListener('click', function() { flip('write'); });
     el('aboutBtn').addEventListener('click', function() { flip('about'); });
-    el('backBtn').addEventListener('click', function() { flip('front'); status.textContent = ''; status.className = 'status'; });
+    el('backBtn').addEventListener('click', function() { flip('front'); statusEl.textContent = ''; statusEl.className = 'status'; });
     el('aboutBackBtn').addEventListener('click', function() { flip('front'); });
     el('anotherBtn').addEventListener('click', pickBackground);
     input.addEventListener('input', function() { counter.textContent = input.value.length + ' / 280'; });
@@ -214,11 +214,11 @@
 
       async function send() {
         var text = input.value.trim();
-        if (text.length < 3) { status.className = 'status bad'; status.textContent = 'A little too short — add a few more words.'; return; }
+        if (text.length < 3) { statusEl.className = 'status bad'; statusEl.textContent = 'A little too short — add a few more words.'; return; }
 
         sendBtn.disabled = true;
-        status.className = 'status busy';
-        status.textContent = "Checking it's kind…";
+        statusEl.className = 'status busy';
+        statusEl.textContent = "Checking it's kind…";
 
         try {
           var res = await fetch(CONFIG.SUBMIT_URL, {
@@ -232,32 +232,32 @@
           var v = await res.json();
 
           if (v.approved) {
-            finishOk('Folded up and passed on. Thank you.', true);
+            finishOk('Thank you! You might have just made someone\u2019s day 😊', true);
           } else if (v.pending) {
             finishOk("Received — a person will check it before it's passed on.", false);
           } else {
-            status.className = 'status bad';
-            status.textContent = v.reason || "Let's keep it kind — try rephrasing.";
+            statusEl.className = 'status bad';
+            statusEl.textContent = v.reason || "Let's keep it kind — try rephrasing.";
             sendBtn.disabled = false;
           }
         } catch (e) {
-          status.className = 'status bad';
-          status.textContent = "Couldn't send just now — try once more.";
+          statusEl.className = 'status bad';
+          statusEl.textContent = "Couldn't send just now — try once more.";
           sendBtn.disabled = false;
         }
       }
 
       function finishOk(msg, refresh) {
-        status.className = 'status good';
-        status.textContent = msg;
+        statusEl.className = 'status good';
+        statusEl.textContent = msg;
         input.value = '';
         counter.textContent = '0 / 280';
         sendBtn.disabled = false;
         setTimeout(function() {
           flip('front');
-          status.textContent = ''; status.className = 'status';
+          statusEl.textContent = ''; statusEl.className = 'status';
           if (refresh) showRandom();
-        }, 1400);
+        }, 2400);
       }
 
       // Wire API-dependent buttons
