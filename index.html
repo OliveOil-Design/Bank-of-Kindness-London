@@ -42,6 +42,7 @@
           <h2>Leave something kind</h2>
           <p class="hint">Write to a stranger you'll never meet. Keep it warm — it's checked before it's passed on.</p>
           <textarea id="input" maxlength="280" placeholder="On whatever bus or bench you're reading this…"></textarea>
+          <input id="nameInput" class="name-input" type="text" maxlength="24" autocomplete="off" placeholder="Leave your first name, if you like!">
           <div class="status" id="status" aria-live="polite"></div>
           <div class="counter" id="counter">0 / 280</div>
           <div class="write-actions">
@@ -144,7 +145,7 @@
     // --- DOM refs ---
     var el = id => document.getElementById(id);
     var card = el('card'), msgText = el('msgText'), msgBox = el('msgBox');
-    var input = el('input'), counter = el('counter'), statusEl = el('status'), sendBtn = el('sendBtn');
+    var input = el('input'), nameInput = el('nameInput'), counter = el('counter'), statusEl = el('status'), sendBtn = el('sendBtn');
     var reportBtn = el('reportBtn'), controls = el('controls');
     var lastId = null;
 
@@ -193,7 +194,7 @@
           }
           var m = res.data[0];
           lastId = m.id;
-          setMessage(m.text, true);
+          setMessage(m.name ? m.text + ' \u2014 ' + m.name : m.text, true);
         } catch (e) {
           setMessage("Couldn't reach the wall just now. Tap to try again.", false);
         }
@@ -214,6 +215,7 @@
 
       async function send() {
         var text = input.value.trim();
+        var name = nameInput.value.trim();
         if (text.length < 3) { statusEl.className = 'status bad'; statusEl.textContent = 'A little too short — add a few more words.'; return; }
 
         sendBtn.disabled = true;
@@ -227,7 +229,7 @@
               'Content-Type': 'application/json',
               'apikey': CONFIG.SUPABASE_KEY,
             },
-            body: JSON.stringify({ text: text }),
+            body: JSON.stringify({ text: text, name: name }),
           });
           var v = await res.json();
 
@@ -251,6 +253,7 @@
         statusEl.className = 'status good';
         statusEl.textContent = msg;
         input.value = '';
+        nameInput.value = '';
         counter.textContent = '0 / 280';
         sendBtn.disabled = false;
         setTimeout(function() {
