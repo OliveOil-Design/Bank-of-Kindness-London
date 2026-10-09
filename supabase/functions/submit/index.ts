@@ -31,14 +31,17 @@ const SYSTEM_PROMPT =
   "kind, neutral, supportive, or harmlessly playful. Reject it ONLY if it is " +
   "hateful, harassing, threatening, sexual, spam or advertising, contains personal " +
   "contact details, or is clearly designed to upset the reader. Be lenient with " +
-  "imperfect or quirky kindness.";
+  "imperfect or quirky kindness. A sender may optionally leave a first name to sign " +
+  "their message; an ordinary first name is fine, but reject a name that is hateful " +
+  "or contains contact details.";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
   try {
-    const { text } = await req.json();
+    const { text, name } = await req.json();
     const clean = (text ?? "").toString().trim();
+    const cleanName = sanitiseName(name);
 
     if (clean.length < 3 || clean.length > 280) {
       return json({ approved: false, reason: "Keep it between 3 and 280 characters." });
@@ -78,10 +81,10 @@ Deno.serve(async (req) => {
     await supa.from("submission_log").insert({ ip_hash: ipHash });
 
     // --- moderation ---------------------------------------------------------
-    const verdict = await moderate(clean);
+    const verdict = await moderate(clean, cleanName);
 
     if (verdict.status === "approved") {
-      await supa.from("messages").insert({ text: clean, approved: true });
+      await supa.from("messages").insert({ text: clean, name: cleanName, approved: true });
       return json({ approved: true });
     }
     if (verdict.status === "rejected") {
@@ -92,7 +95,7 @@ Deno.serve(async (req) => {
     }
 
     // Moderator unreachable / unparseable: fail safe — hold unpublished for a human.
-    await supa.from("messages").insert({ text: clean, approved: false });
+    await supa.from("messages").insert({ text: clean, name: cleanName, approved: false });
     return json({ approved: false, pending: true });
   } catch (e) {
     console.error("Top-level handler error:", e);
@@ -114,9 +117,17 @@ async function hashIp(ip: string): Promise<string> {
   return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+// Optional display name: keep only the first name, strip control characters, cap it.
+function sanitiseName(raw: unknown): string | null {
+  const s = (raw ?? "").toString().replace(/[\u0000-\u001f\u007f]/g, " ").trim();
+  if (!s) return null;
+  const first = s.split(/\s+/)[0].slice(0, 24).trim();
+  return first || null;
+}
+
 type Verdict = { status: "approved" | "rejected" | "error"; reason?: string };
 
-async function moderate(text: string): Promise<Verdict> {
+async function moderate(text: string, name: string | null): Promise<Verdict> {
   const base = Deno.env.get("MODERATION_BASE_URL");
   const key = Deno.env.get("MODERATION_API_KEY");
   const model = Deno.env.get("MODERATION_MODEL");
@@ -143,8 +154,9 @@ async function moderate(text: string): Promise<Verdict> {
           {
             role: "user",
             content:
-              `Message: """${text}"""\n\n` +
-              `Reply with ONLY a JSON object, no markdown: ` +
+              `Message: """${text}"""\n` +
+              (name ? `Sender's first name: """${name}"""\n` : ``) +
+              `\nReply with ONLY a JSON object, no markdown: ` +
               `{"approved": boolean, "reason": "short friendly note if rejected, empty string if approved"}`,
           },
         ],

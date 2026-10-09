@@ -13,6 +13,9 @@ create table if not exists public.messages (
 -- add reports column if upgrading from an earlier version
 alter table public.messages add column if not exists reports int not null default 0;
 
+-- optional first name, left by the sender (null when anonymous)
+alter table public.messages add column if not exists name text;
+
 -- 2. Row Level Security -----------------------------------------------------
 -- Visitors (anon key) may READ approved messages and nothing else. All writes
 -- happen through controlled paths: the submit edge function (service role) and
