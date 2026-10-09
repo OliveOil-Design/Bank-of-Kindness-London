@@ -106,4 +106,4 @@ Reporting hides first and asks questions later — kinder default for a public w
 
 ## A note on privacy
 
-Messages carry no names or accounts. The only thing resembling personal data is the transient, hashed, auto-pruned rate-limit entry. Keep a one-line visible notice about how messages are handled and reviewed — enough for a street test of user-submitted public content in the UK.
+Messages carry no accounts and no logins. A sender may **optionally** leave a first name to sign their note — it's shown publicly on the card as `message — Name`. The name is trimmed to the first word only and capped at 24 characters, server-side, and it's reviewed by the same moderation as the message. Leave it blank and the note stays anonymous. The only other thing resembling personal data is the transient, hashed, auto-pruned rate-limit entry. Keep a one-line visible notice about how messages are handled and reviewed — enough for a street test of user-submitted public content in the UK.
