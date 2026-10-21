@@ -32,7 +32,7 @@
         <section class="face front" aria-label="A kind word from a stranger">
           <div class="divider"><span>Kindness from a Londoner</span></div>
           <div class="message" id="msgBox" aria-live="polite">
-            <blockquote id="msgText">Unfolding a kind word…</blockquote>
+            <blockquote id="msgText" class="is-system">Unfolding a kind word…</blockquote>
           </div>
           <div class="divider"><span>Left for whoever came next</span></div>
         </section>
@@ -71,9 +71,9 @@
     <div class="controls" id="controls">
       <button class="report" id="reportBtn" type="button" hidden>Report this</button>
       <div class="actions">
-        <button class="btn-white" id="anotherBtn" type="button">Another</button>
-        <button class="btn-primary" id="passBtn" type="button"><span>Deposit</span><span>Kindness</span></button>
         <button class="btn-white" id="aboutBtn" type="button">About</button>
+        <button class="btn-primary" id="passBtn" type="button"><span>Deposit</span><span>Kindness</span></button>
+        <button class="btn-white" id="anotherBtn" type="button">Another</button>
       </div>
     </div>
   </main>
@@ -152,6 +152,7 @@
     // --- UI functions (work immediately, no external deps) ---
     function setMessage(text, reportable) {
       msgText.textContent = text;
+      msgText.classList.toggle('is-system', !reportable);
       reportBtn.hidden = !reportable;
       msgBox.classList.remove('enter');
       void msgBox.offsetWidth;
@@ -185,8 +186,10 @@
       var sb = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
 
       async function showRandom() {
+        var loading = setTimeout(function() { setMessage('Unfolding a kind word…', false); }, 1000);
         try {
           var res = await sb.rpc('get_random_message', { exclude_id: lastId });
+          clearTimeout(loading);
           if (res.error) throw res.error;
           if (!res.data || !res.data.length) {
             setMessage('Be the very first. Pass on a kind word and the next person will find it here.', false);
@@ -196,6 +199,7 @@
           lastId = m.id;
           setMessage(m.name ? m.text + ' \u2014 ' + m.name : m.text, true);
         } catch (e) {
+          clearTimeout(loading);
           setMessage("Couldn't reach the wall just now. Tap to try again.", false);
         }
       }
