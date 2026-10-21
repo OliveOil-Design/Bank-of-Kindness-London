@@ -1,5 +1,5 @@
 
-Site is live and can be accessed here: https://oliveoil-design.github.io/Bank-of-Kindness-London/
+Site is live and can be accessed here: [https://oliveoil-design.github.io/Bank-of-Kindness-London/](https://london.thebankofkindness.com/)
 
 
 # Kind Words, London
