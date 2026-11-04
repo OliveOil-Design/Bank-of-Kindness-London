@@ -16,8 +16,9 @@ kind-words/
 
 ## How it fits together
 
-- **Read** happens straight from the browser: a Postgres function returns one random *approved* message. Row Level Security means the anon key can only ever read approved rows.
+- **Read** happens straight from the browser: a plain `fetch` to a Postgres function returns one random *approved* message. Row Level Security means the anon key can only ever read approved rows. (No third-party script is loaded — no supabase-js CDN dependency.)
 - **Write** never touches the table directly. The browser posts the text to the `submit` edge function, which moderates it server-side (where the API keys live) and inserts it only if it passes. So no one can bypass moderation, even with the anon key.
+- **Reports** also go through the `submit` edge function (with their own rate limit). The anon-facing `report_message` rpc is revoked, so the rate limit can't be bypassed.
 
 ## Setup (about 20 minutes)
 
@@ -86,13 +87,15 @@ delete from public.messages where id = '...';
 - The **anon key is meant to be public** — RLS is what protects the data, not key secrecy.
 - The **service_role key never leaves the edge function**. Don't put it in `index.html`.
 - Visitors can't insert directly; all writes go through moderation.
+- **Links are blocked outright** (`http://`, `https://`, `www.`, and common spam-TLD domains) before a moderation call is even spent — a kindness wall has no reason to contain URLs.
+- The moderation prompt explicitly treats the message and name as **untrusted data, never instructions**, to blunt prompt-injection attempts; and the rejection "reason" shown to the sender is capped at 200 characters.
 - On moderation failure the system **fails safe** (holds for review) rather than publishing.
 
 ## Reporting and rate limiting
 
 Both are built in.
 
-**Report** — every displayed message has a small "Report this" link. Tapping it pulls the message off the wall immediately (it stops being served) and adds it to the same review queue, where you can restore or delete it:
+**Report** — every displayed message has a small "Report this" link. Tapping it sends the report through the same `submit` edge function (so it's rate-limited too), and the message is pulled off the wall immediately (it stops being served) and added to the same review queue, where you can restore or delete it:
 
 ```sql
 select * from public.messages where approved = false order by reports desc, created_at desc;
@@ -102,7 +105,7 @@ delete from public.messages where id = '...';                              -- re
 
 Reporting hides first and asks questions later — kinder default for a public wall, and false flags are easy to undo.
 
-**Rate limit** — the `submit` function allows **5 submissions per 15 minutes per IP** (tweak the two constants at the top of `index.ts`). It keys off a **salted hash of the IP, never the raw IP**, in the `submission_log` table, and prunes expired rows on every call — so there's no standing store of who submitted what. Set `RATE_LIMIT_SALT` to any long random string (the command above generates one).
+**Rate limit** — the `submit` function allows **5 submissions and 10 reports per 15 minutes per IP** (tweak the constants at the top of `index.ts`; each has its own counter via the `kind` column in `submission_log`). It keys off a **salted hash of the IP, never the raw IP**, and prunes expired rows on every call — so there's no standing store of who submitted what. Set `RATE_LIMIT_SALT` to any long random string (the command above generates one).
 
 ## A note on privacy
 

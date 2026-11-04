@@ -46,8 +46,9 @@ grant execute on function public.get_random_message(uuid) to anon;
 
 -- 4. Reporting --------------------------------------------------------------
 -- A reported message is pulled from the wall immediately (approved = false)
--- and counted, so a human can review it in the queue. security definer lets
--- anon trigger this one controlled write without any direct table access.
+-- and counted, so a human can review it in the queue. Reports are submitted
+-- through the `submit` edge function (service role), which rate-limits them —
+-- so anon has no direct access to this function at all.
 create or replace function public.report_message(msg_id uuid)
 returns void
 language plpgsql
@@ -62,7 +63,9 @@ begin
 end;
 $$;
 
-grant execute on function public.report_message(uuid) to anon;
+-- the edge function calls this with the service role; block the unthrottled
+-- direct-anon path so the report rate limit can't be bypassed
+revoke execute on function public.report_message(uuid) from anon;
 
 -- 5. Rate-limit log ---------------------------------------------------------
 -- One row per submission attempt, keyed on a SALTED HASH of the IP (never the
@@ -71,12 +74,16 @@ grant execute on function public.report_message(uuid) to anon;
 -- role (the edge function) can touch it.
 create table if not exists public.submission_log (
   ip_hash     text not null,
+  kind        text not null default 'submit',  -- 'submit' or 'report': separate rate limits
   created_at  timestamptz not null default now()
 );
 create index if not exists submission_log_lookup
   on public.submission_log (ip_hash, created_at);
 
 alter table public.submission_log enable row level security;
+
+-- add the kind column if upgrading from an earlier version
+alter table public.submission_log add column if not exists kind text not null default 'submit';
 
 -- 6. Seed messages (only if the wall is empty) ------------------------------
 insert into public.messages (text, approved)
