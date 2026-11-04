@@ -190,7 +190,6 @@ The final piece: stickers that link the street to your wall.
 3. Print tips: print large enough that the code is scannable from ~1 metre; use weatherproof/waterproof sticker paper or a vinyl sticker service; add one line of text next to the code — e.g. *"Scan for a kind word"* — so people know what they're scanning.
 4. Stick. Done. 🏙️
 
-📸 *Screenshot: `images/readme/06-qr-sticker.jpeg` — an example of a finished London sticker.*
 
 ---
 
